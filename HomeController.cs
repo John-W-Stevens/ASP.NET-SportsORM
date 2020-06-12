@@ -30,9 +30,7 @@ namespace SportsORM.Controllers
         [HttpGet("level_1")]
         public IActionResult Level1()
         {
-
             // Using ViewBag:
-
             // All women's leagues
             ViewBag.WomensLeagues = context.Leagues.Where(l => l.Name.Contains("Women"));
 
@@ -81,9 +79,57 @@ namespace SportsORM.Controllers
             return View();
         }
 
+        
+
         [HttpGet("level_2")]
         public IActionResult Level2()
         {
+            // All teams in the Atlantic Soccer Conference
+            ViewBag.AllTeamsASC = context.Teams
+                .Where(t => t.CurrLeague.Name == "Atlantic Soccer Conference")
+                .Include(t => t.CurrLeague);
+
+            // All (current) players on the Boston Penguins
+            Team BP = context.Teams
+                .Include(t => t.CurrentPlayers)
+                .FirstOrDefault(t => t.TeamName == "Penguins" && t.Location == "Boston");
+            ViewBag.BP = BP;
+
+            // All teams in the International Collegiate Baseball Conference
+            ViewBag.AllTeamsICBC = context.Teams
+                .Where(t => t.CurrLeague.Name == "International Collegiate Baseball Conference")
+                .Include(t => t.CurrLeague);
+
+            // All teams in the American Conference of Amateur Football
+            ViewBag.AllTeamsACAF = context.Teams
+                .Where(t => t.CurrLeague.Name == "American Conference of Amateur Football")
+                .Include(t => t.CurrLeague);
+
+            // All football teams
+            ViewBag.AllFootballTeams = context.Teams
+                .Where(t => t.CurrLeague.Name.Contains("football") || t.CurrLeague.Name.Contains("Football"))
+                .Include(t => t.CurrLeague);
+
+            // all teams with a (current) player named "Sophia"
+            ViewBag.AllTeamsWCPNSophia = context.Teams
+                .Where(t => t.CurrentPlayers.Any(p => p.FirstName == "Sophia" || p.LastName == "Sophia"))
+                .Include(t => t.CurrentPlayers);
+
+            // everyone with the last name "Flores" who DOESN'T (currently) play for the Raptors (hint: think about ways you can filter data on the cshtml side)
+            ViewBag.PlayersNamedFlores = context.Players
+                .Where(t => t.FirstName == "Flores" || t.LastName == "Flores")
+                .Include(t => t.CurrentTeam);
+
+            // all current players with the Manitoba Tiger-Cats
+            ViewBag.MWC = context.Teams
+                .Include(t => t.CurrentPlayers)
+                .FirstOrDefault(t => t.TeamName.Contains("Tiger-Cats") && t.Location == "Manitoba");
+
+            // ...all teams that have had 12 or more players
+            ViewBag.AllTeamsWithAtLeast12Players = context.Teams
+                .Where(t => t.AllPlayers.Count >= 12)
+                .Include(t => t.AllPlayers);
+
             return View();
         }
 
