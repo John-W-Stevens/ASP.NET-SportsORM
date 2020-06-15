@@ -136,6 +136,42 @@ namespace SportsORM.Controllers
         [HttpGet("level_3")]
         public IActionResult Level3()
         {
+            ViewBag.AllTeamsWithAB = context.Players
+                .Include(p => p.AllTeams)
+                .ThenInclude(allT => allT.TeamOfPlayer)
+                .FirstOrDefault(p => p.FirstName == "Alexander" && p.LastName == "Bailey");
+
+            // All players, past and present, with the Manitoba Tiger-Cats
+            ViewBag.AllPlayersWithMTC = context.Teams
+                .Include(t => t.AllPlayers)
+                .ThenInclude(allP => allP.PlayerOnTeam)
+                .FirstOrDefault(t => t.TeamName == "Tiger-Cats" && t.Location == "Manitoba");
+
+            // All players who were formerly (but aren't currently) with the Wichita Vikings
+            ViewBag.WichitaVikings = context.Teams
+                .Include(t => t.AllPlayers)
+                .ThenInclude(allP => allP.PlayerOnTeam)
+                .Include(t => t.CurrentPlayers)
+                .FirstOrDefault(t => t.TeamName == "Vikings" && t.Location == "Wichita");
+
+            // Every team that Emily Sanchez played for before she joined the Indiana Royals
+            ViewBag.EmilySanchez = context.Players
+                .Include(p => p.AllTeams)
+                .ThenInclude(t => t.TeamOfPlayer)
+                .FirstOrDefault(p => p.FirstName == "Emily" && p.LastName == "Sanchez");
+
+            // Everyone named "Levi" who has ever played in the Atlantic Federation of Amateur Baseball Players
+            ViewBag.AFABP = context.Leagues
+                .Include(t => t.Teams)
+                .ThenInclude(t => t.AllPlayers)
+                .ThenInclude(t => t.PlayerOnTeam)
+                .FirstOrDefault(l => l.Name == "Atlantic Federation of Amateur Baseball Players");
+
+            // All players, sorted by the number of teams they've played for
+            ViewBag.AllPlayersSorted = context.Players
+                .Include(p => p.AllTeams)
+                .OrderByDescending(p => p.AllTeams.Count());
+
             return View();
         }
 

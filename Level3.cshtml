@@ -1,0 +1,103 @@
+@{
+    ViewData["Title"] = "Level 3";
+}
+
+<div class="well">
+    <p>Using the SportsORM, complete all the following queries and show their results on Level3.cshtml.</p>
+    <ol>
+        <li>...all teams, past and present, that Alexander Bailey has played with</li>
+        <li>...all players, past and present, with the Manitoba Tiger-Cats</li>
+        <li>...all players who were formerly (but aren't currently) with the Wichita Vikings</li>
+        <li>...every team that Emily Sanchez played for before she joined the Indiana Royals</li>
+        <li>...everyone named "Levi" who has ever played in the Atlantic Federation of Amateur Baseball Players</li>
+        <li>...all players, sorted by the number of teams they've played for</li>
+    </ol>
+</div>
+
+
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <h3>...all teams, past and present, that Alexander Bailey has played with</h3>
+        <ul>
+            @foreach (var team in ViewBag.AllTeamsWithAB.AllTeams)
+            {
+                <li>Alexander Bailey played for the @team.TeamOfPlayer.TeamName </li>
+            }
+        </ul>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <h3>...all players, past and present, with the Manitoba Tiger-Cats</h3>
+        <ul>
+            @foreach (var player in ViewBag.AllPlayersWithMTC.AllPlayers)
+            {
+                <li>@player.PlayerOnTeam.FirstName</li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <h3>...all players who were formerly (but aren't currently) with the Wichita Vikings</h3>
+        <ul>
+
+            @foreach (var player in ViewBag.WichitaVikings.AllPlayers)
+            {
+                if (!ViewBag.WichitaVikings.CurrentPlayers.Contains(player.PlayerOnTeam))
+                {
+                    <li>@player.PlayerOnTeam.FirstName @player.PlayerOnTeam.LastName</li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <h3>...every team that Emily Sanchez played for before she joined the Indiana Royals</h3>
+        <ul>
+            @foreach (var team in ViewBag.EmilySanchez.AllTeams)
+            {
+                <li>@team.TeamOfPlayer.TeamName</li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <h3>...everyone named "Levi" who has ever played in the Atlantic Federation of Amateur Baseball Players</h3>
+        <ul>
+            @foreach (var team in ViewBag.AFABP.Teams)
+            {
+                @foreach (var player in team.AllPlayers)
+                {
+                    if (player.PlayerOnTeam.FirstName == "Levi" || player.PlayerOnTeam.LastName == "Levi")
+                    {
+                        <li>@player.PlayerOnTeam.FirstName @player.PlayerOnTeam.LastName</li>
+                    }
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <h3>...all players, sorted by the number of teams they've played for</h3>
+        <ul>
+            @foreach (var player in ViewBag.AllPlayersSorted)
+            {
+               <li>@player.FirstName @player.LastName has played for a total of @player.AllTeams.Count teams</li>
+            }
+        </ul>
+    </div>
+</div>
+
